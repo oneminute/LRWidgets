@@ -8,7 +8,7 @@
 #       define LRWIDGET_EXPORT Q_DECL_IMPORT
 #   endif
 #else
-#   define LRWIDGET_EXPORT Q_DECL_IMPORT
+#   define LRWIDGET_EXPORT
 #endif
 
 
