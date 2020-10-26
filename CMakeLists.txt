@@ -113,7 +113,7 @@ set(QM_FILES
     ${HEADER_FILES}
 )
 
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
 
 add_subdirectory(examples)
 
