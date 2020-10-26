@@ -7,7 +7,9 @@
 #include <QIntValidator>
 #include <QtUiPlugin/QDesignerExportWidget>
 
-class EditSlider : public QWidget
+#include "ExportLRWidgets.h"
+
+class LRWIDGET_EXPORT EditSlider : public QWidget
 {
     Q_OBJECT
 
