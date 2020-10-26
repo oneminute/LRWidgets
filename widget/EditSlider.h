@@ -24,6 +24,7 @@ class LRWIDGET_EXPORT EditSlider : public QWidget
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY onTextChanged DESIGNABLE false)
     Q_PROPERTY(QSize maximumLineEditSize READ maximumLineEditSize WRITE setMaximumLineEditSize NOTIFY onLineEditSizeChanged DESIGNABLE true)
 public:
+    EditSlider(QWidget *parent = 0);
     EditSlider(Qt::Orientation dir = Qt::Horizontal, QWidget *parent = 0);
 
     int minimum() const;
@@ -65,9 +66,11 @@ signals:
     void valueChanged(int value);
 
 private:
+    void init();
     void validateText();
 
 private:
+    Qt::Orientation m_dir;
     QLineEdit* m_edit;
     QSlider* m_slider;
     QIntValidator* m_validator;

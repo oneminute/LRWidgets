@@ -3,36 +3,18 @@
 #include <QBoxLayout>
 #include <QtMath>
 
-EditSlider::EditSlider(Qt::Orientation dir, QWidget *parent) :
-    QWidget(parent)
+EditSlider::EditSlider(QWidget *parent) 
+    : QWidget(parent)
+    , m_dir(Qt::Horizontal)
 {
-    m_slider = new QSlider(dir);
+    init();
+}
 
-    m_edit = new QLineEdit;
-    m_edit->setMaximumWidth(30);
-    m_edit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    m_edit->setText(QString::number(m_slider->minimum()));
-
-    m_validator = new QIntValidator(m_slider->minimum(), m_slider->maximum(), this);
-    m_edit->setValidator(m_validator);
-
-    QBoxLayout* layout = new QBoxLayout(QBoxLayout::Direction::LeftToRight);
-    if (dir == Qt::Horizontal)
-        layout->setDirection(QBoxLayout::LeftToRight);
-    else if (dir == Qt::Vertical)
-        layout->setDirection(QBoxLayout::TopToBottom);
-
-    layout->addWidget(m_slider);
-    layout->addWidget(m_edit);
-    layout->setStretch(0, 1);
-    layout->setStretch(1, 0);
-    layout->setMargin(0);
-
-    setLayout(layout);
-
-    connect(m_slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
-    connect(m_edit, &QLineEdit::textChanged, this, &EditSlider::onLineEditTextChanged);
-    connect(m_slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
+EditSlider::EditSlider(Qt::Orientation dir, QWidget *parent) 
+    : QWidget(parent)
+    , m_dir(dir)
+{
+    init();
 }
 
 int EditSlider::minimum() const
@@ -175,6 +157,37 @@ void EditSlider::onLineEditTextChanged(const QString &text)
         m_slider->setValue(value);
         m_slider->blockSignals(false);
     }
+}
+
+void EditSlider::init()
+{
+    m_slider = new QSlider(m_dir);
+
+    m_edit = new QLineEdit;
+    m_edit->setMaximumWidth(30);
+    m_edit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    m_edit->setText(QString::number(m_slider->minimum()));
+
+    m_validator = new QIntValidator(m_slider->minimum(), m_slider->maximum(), this);
+    m_edit->setValidator(m_validator);
+
+    QBoxLayout* layout = new QBoxLayout(QBoxLayout::Direction::LeftToRight);
+    if (m_dir == Qt::Horizontal)
+        layout->setDirection(QBoxLayout::LeftToRight);
+    else if (m_dir == Qt::Vertical)
+        layout->setDirection(QBoxLayout::TopToBottom);
+
+    layout->addWidget(m_slider);
+    layout->addWidget(m_edit);
+    layout->setStretch(0, 1);
+    layout->setStretch(1, 0);
+    layout->setMargin(0);
+
+    setLayout(layout);
+
+    connect(m_slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
+    connect(m_edit, &QLineEdit::textChanged, this, &EditSlider::onLineEditTextChanged);
+    connect(m_slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
 }
 
 void EditSlider::validateText()
