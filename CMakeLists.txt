@@ -100,7 +100,12 @@ endif(BUILD_SHARED_LIBRARY)
 add_library(${PROJECT_NAME} ${BUILD_LIBRARY_MODE} ${SRC_FILES} ${SRC_FILES} ${HEADER_FILES} ${OTHER_FILES} ${TS_FILES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LINK_LIBRARIES})
-target_compile_definitions(${PROJECT_NAME} PRIVATE EXPORT_LRWIDGETS BUILD_SHARED_LIBRARY)
+if (BUILD_SHARED_LIBRARY)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE EXPORT_LRWIDGETS BUILD_SHARED_LIBRARY)
+else (BUILD_SHARED_LIBRARY)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE EXPORT_LRWIDGETS)
+endif (BUILD_SHARED_LIBRARY)
+
 
 set(QM_FILES
     ${QM_FILES}
@@ -108,7 +113,7 @@ set(QM_FILES
     ${HEADER_FILES}
 )
 
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
 
 add_subdirectory(examples)
 
