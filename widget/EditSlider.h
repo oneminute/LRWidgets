@@ -25,7 +25,7 @@ class LRWIDGET_EXPORT EditSlider : public QWidget
     Q_PROPERTY(QSize maximumLineEditSize READ maximumLineEditSize WRITE setMaximumLineEditSize NOTIFY onLineEditSizeChanged DESIGNABLE true)
 public:
     EditSlider(QWidget *parent = 0);
-    EditSlider(Qt::Orientation dir = Qt::Horizontal, QWidget *parent = 0);
+    EditSlider(Qt::Orientation dir, QWidget *parent = 0);
 
     int minimum() const;
     void setMinimum(int minimum);
