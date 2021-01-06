@@ -26,8 +26,10 @@ set(LRWIDGETS_BUILD_SHARED_LIBRARY FALSE CACHE BOOL FALSE)
 set(LRWIDGETS_BUILD_EXAMPLES TRUE CACHE BOOL TRUE)
 
 find_package(Qt5 COMPONENTS Widgets Charts LinguistTools OpenGL CONFIG REQUIRED)
-set(TS_FILES translation/LRWidgets_zh_CN.ts)
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+if (STANDALONE)
+    set(TS_FILES translation/LRWidgets_zh_CN.ts)
+    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+endif(STANDALONE)
 
 #add_subdirectory(widgets)
 set(INCLUDE_DIRS
