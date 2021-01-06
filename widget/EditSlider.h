@@ -13,16 +13,16 @@ class LRWIDGET_EXPORT EditSlider : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY(int minimum READ minimum WRITE setMinimum NOTIFY onSliderRangeChanged DESIGNABLE true)
-    Q_PROPERTY(int maximum READ maximum WRITE setMaximum NOTIFY onSliderRangeChanged DESIGNABLE true)
+    Q_PROPERTY(int minimum READ minimum WRITE setMinimum DESIGNABLE true)
+    Q_PROPERTY(int maximum READ maximum WRITE setMaximum DESIGNABLE true)
     Q_PROPERTY(int singleStep READ singleStep WRITE setSingleStep DESIGNABLE true)
     Q_PROPERTY(int pageStep READ pageStep WRITE setPageStep DESIGNABLE true)
     Q_PROPERTY(int value READ value WRITE setValue DESIGNABLE true)
     Q_PROPERTY(int sliderPosition READ sliderPosition WRITE setSliderPosition DESIGNABLE true)
     Q_PROPERTY(bool tracking READ tracking WRITE setTracking DESIGNABLE true)
 
-    Q_PROPERTY(QString text READ text WRITE setText NOTIFY onTextChanged DESIGNABLE false)
-    Q_PROPERTY(QSize maximumLineEditSize READ maximumLineEditSize WRITE setMaximumLineEditSize NOTIFY onLineEditSizeChanged DESIGNABLE true)
+    Q_PROPERTY(QString text READ text WRITE setText DESIGNABLE false)
+    Q_PROPERTY(QSize maximumLineEditSize READ maximumLineEditSize WRITE setMaximumLineEditSize DESIGNABLE true)
 public:
     EditSlider(QWidget *parent = 0);
     EditSlider(Qt::Orientation dir, QWidget *parent = 0);

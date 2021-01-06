@@ -1,5 +1,5 @@
-﻿#include "imagebutton.h"
-#include "ui_imagebutton.h"
+﻿#include "ImageButton.h"
+#include "ui_ImageButton.h"
 #include <QDebug>
 #include <QFont>
 ImageButton::ImageButton(QWidget *parent) :
@@ -7,18 +7,17 @@ ImageButton::ImageButton(QWidget *parent) :
     ui(new Ui::ImageButton)
 {
     ui->setupUi(this);
-    //ui->img->setMaximumSize(150, 150);
     ui->img->setAlignment(Qt::AlignCenter);
 
 
-    QPixmap pix(":/imgs/images/icon.png");
+    //QPixmap pix(":/imgs/images/icon.png");
     //ui->img->setScaledContents(true);
     //ui->img->resize(QSize(60, 60));
 
     //pix.scaled(QSize(60, 60), Qt::IgnoreAspectRatio);
 
-    ui->img->setPixmap(pix);
-    ui->text->setText("123");
+    //ui->img->setPixmap(pix);
+    //ui->text->setText("123");
     //ui->text->resize(ui->img->width(), ui->text->height());
 
 
