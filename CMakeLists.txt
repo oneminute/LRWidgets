@@ -119,6 +119,11 @@ else (LRWIDGETS_BUILD_SHARED_LIBRARY)
     target_compile_definitions(${PROJECT_NAME} PRIVATE EXPORT_LRWIDGETS)
 endif (LRWIDGETS_BUILD_SHARED_LIBRARY)
 
+if (LRWIDGETS_BUILD_EXAMPLES)
+    add_executable(${PROJECT_NAME}_Example01 examples/main.cpp)
+    target_link_libraries(${PROJECT_NAME}_Example01 PRIVATE ${LINK_LIBRARIES} ${PROJECT_NAME})
+endif (LRWIDGETS_BUILD_EXAMPLES)
+
 set(QM_FILES
     ${QM_FILES}
     ${SRC_FILES}

@@ -96,14 +96,14 @@ void EditSlider::setTracking(bool tracking)
     m_slider->setTracking(tracking);
 }
 
-QSize EditSlider::maximumLineEditSize() const
+int EditSlider::maximumLineEditWidth() const
 {
-    return m_edit->maximumSize();
+    return m_edit->maximumWidth();
 }
 
-void EditSlider::setMaximumLineEditSize(const QSize &size)
+void EditSlider::setMaximumLineEditWidth(int width)
 {
-    m_edit->setMaximumSize(size);
+    m_edit->setMaximumWidth(width);
 }
 
 QString EditSlider::text() const
@@ -127,18 +127,6 @@ void EditSlider::setText(const QString &text)
     }
 }
 
-void EditSlider::onLineEditSizeChanged()
-{
-}
-
-void EditSlider::onSliderRangeChanged()
-{
-}
-
-void EditSlider::onTextChanged()
-{
-}
-
 void EditSlider::onSliderValueChanged(int value)
 {
     m_edit->blockSignals(true);
@@ -146,14 +134,13 @@ void EditSlider::onSliderValueChanged(int value)
     m_edit->blockSignals(false);
 }
 
-void EditSlider::onLineEditTextChanged(const QString &text)
+void EditSlider::onLineEditTextEditingFinished()
 {
-    QString str = text;
     int pos = 0;
-    if (m_validator->validate(str, pos) == QValidator::Acceptable)
+    if (m_validator->validate(m_edit->text(), pos) == QValidator::Acceptable)
     {
         m_slider->blockSignals(true);
-        int value = qBound(m_slider->minimum(), text.toInt(), m_slider->maximum());
+        int value = qBound(m_slider->minimum(), m_edit->text().toInt(), m_slider->maximum());
         m_slider->setValue(value);
         m_slider->blockSignals(false);
     }
@@ -164,7 +151,6 @@ void EditSlider::init()
     m_slider = new QSlider(m_dir);
 
     m_edit = new QLineEdit;
-    m_edit->setMaximumWidth(30);
     m_edit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     m_edit->setText(QString::number(m_slider->minimum()));
 
@@ -186,8 +172,8 @@ void EditSlider::init()
     setLayout(layout);
 
     connect(m_slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
-    connect(m_edit, &QLineEdit::textChanged, this, &EditSlider::onLineEditTextChanged);
     connect(m_slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
+    connect(m_edit, &QLineEdit::editingFinished, this, &EditSlider::onLineEditTextEditingFinished);
 }
 
 void EditSlider::validateText()

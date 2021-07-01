@@ -20,9 +20,8 @@ class LRWIDGET_EXPORT EditSlider : public QWidget
     Q_PROPERTY(int value READ value WRITE setValue DESIGNABLE true)
     Q_PROPERTY(int sliderPosition READ sliderPosition WRITE setSliderPosition DESIGNABLE true)
     Q_PROPERTY(bool tracking READ tracking WRITE setTracking DESIGNABLE true)
+    Q_PROPERTY(int maximumLineEditWidth READ maximumLineEditWidth WRITE setMaximumLineEditWidth DESIGNABLE true)
 
-    Q_PROPERTY(QString text READ text WRITE setText DESIGNABLE false)
-    Q_PROPERTY(QSize maximumLineEditSize READ maximumLineEditSize WRITE setMaximumLineEditSize DESIGNABLE true)
 public:
     EditSlider(QWidget *parent = 0);
     EditSlider(Qt::Orientation dir, QWidget *parent = 0);
@@ -48,19 +47,15 @@ public:
     bool tracking() const;
     void setTracking(bool tracking);
 
-    QSize maximumLineEditSize() const;
-    void setMaximumLineEditSize(const QSize& size);
+    int maximumLineEditWidth() const;
+    void setMaximumLineEditWidth(int width);
 
     QString text() const;
     void setText(const QString& text);
 
-public slots:
-    void onLineEditSizeChanged();
-    void onSliderRangeChanged();
-    void onTextChanged();
-
+protected slots:
     void onSliderValueChanged(int value);
-    void onLineEditTextChanged(const QString& text);
+    void onLineEditTextEditingFinished();
 
 signals:
     void valueChanged(int value);
