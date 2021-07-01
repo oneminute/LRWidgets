@@ -32,10 +32,16 @@ QLineEditEx::~QLineEditEx()
 
 }
 
-QString QLineEditEx::text() const
+QString QLineEditEx::renderText() const
 {
     Q_D(const QLineEditEx);
     return d->textTemplate.arg(d->text);
+}
+
+QString QLineEditEx::text() const
+{
+    Q_D(const QLineEditEx);
+    return d->text;
 }
 
 void QLineEditEx::setText(const QString& text)
@@ -43,7 +49,8 @@ void QLineEditEx::setText(const QString& text)
     Q_D(QLineEditEx);
     if (text != d->text)
     {
-        QLineEdit::setText(this->text());
+        d->text = text;
+        QLineEdit::setText(this->renderText());
         emit textChanged(text);
     }
 }
@@ -73,14 +80,14 @@ void QLineEditEx::focusInEvent(QFocusEvent* e)
 
 void QLineEditEx::updateText()
 {
-    QLineEdit::setText(text());
+    QLineEdit::setText(renderText());
 }
 
 void QLineEditEx::onEditingFinished()
 {
     Q_D(QLineEditEx);
     d->text = QLineEdit::text();
-    QString text = this->text();
+    QString text = this->renderText();
     QLineEdit::setText(text);
     emit textChanged(text);
 }

@@ -9,13 +9,14 @@ class QLineEditEx : public QLineEdit
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged DESIGNABLE true )
+    Q_PROPERTY(QString renderText READ renderText WRITE setText NOTIFY textChanged DESIGNABLE true )
     Q_PROPERTY(QString textTemplate READ textTemplate WRITE setTextTemplate NOTIFY textTemplateChanged DESIGNABLE true)
 
 public:
     explicit QLineEditEx(QWidget* parent = nullptr);
     ~QLineEditEx();
 
+    QString renderText() const;
     QString text() const;
     void setText(const QString& text);
 

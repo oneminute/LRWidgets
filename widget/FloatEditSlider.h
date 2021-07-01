@@ -54,7 +54,9 @@ public:
 
 public slots:
     void onSliderValueChanged(int value);
-    void onLineEditEditingFinished();
+    void onLineEditTextChanged(const QString& text);
+    void updateText();
+    void updateWidget();
 
 protected slots:
     void onRangeChanged(qreal min, qreal max);

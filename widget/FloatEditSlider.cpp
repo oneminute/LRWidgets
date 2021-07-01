@@ -1,4 +1,5 @@
 #include "FloatEditSlider.h"
+#include "QBoxLayout"
 #include "QLineEditEx.h"
 
 class FloatEditSliderPrivate
@@ -31,6 +32,22 @@ FloatEditSlider::FloatEditSlider(Qt::Orientation orientation, QWidget* parent)
 {
     Q_D(FloatEditSlider);
     d->orientation = orientation;
+    d->slider = new QSlider(orientation, this);
+    d->edit = new QLineEditEx(this);
+
+    QBoxLayout* layout = (orientation == Qt::Horizontal) ? new QBoxLayout(QBoxLayout::LeftToRight, this) : new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->addWidget(d->slider);
+    layout->addWidget(d->edit);
+    layout->setStretch(0, 1);
+    layout->setStretch(1, 0);
+
+    setLayout(layout);
+
+    connect(this, &FloatEditSlider::rangeChanged, this, &FloatEditSlider::onRangeChanged);
+    connect(this, &FloatEditSlider::stepChanged, this, &FloatEditSlider::onStepChanged);
+    connect(this, &FloatEditSlider::pageChanged, this, &FloatEditSlider::onPageChanged);
+    connect(d->slider, &QSlider::valueChanged, this, &FloatEditSlider::onSliderValueChanged);
+    connect(d->edit, &QLineEditEx::textChanged, this, &FloatEditSlider::onLineEditTextChanged);
 }
 
 qreal FloatEditSlider::minimum() const
@@ -140,7 +157,7 @@ void FloatEditSlider::setMaximumLineEditWidth(int width)
 QString FloatEditSlider::text() const
 {
     Q_D(const FloatEditSlider);
-    return d->edit->text();
+    return d->edit->renderText();
 }
 
 QString FloatEditSlider::textTemplate() const
@@ -157,25 +174,51 @@ void FloatEditSlider::setTextTemplate(const QString& textTemplate)
 
 void FloatEditSlider::onSliderValueChanged(int value)
 {
-
+    Q_D(FloatEditSlider);
+    d->value = value * d->step;
+    d->edit->blockSignals(true);
+    updateText();
+    d->edit->blockSignals(false);
+    emit valueChanged(d->value);
 }
 
-void FloatEditSlider::onLineEditEditingFinished()
+void FloatEditSlider::onLineEditTextChanged(const QString& text)
 {
+    Q_D(FloatEditSlider);
+    d->value = text.toDouble();
+    d->slider->setValue(d->value / d->step);
+    emit valueChanged(d->value);
+}
 
+void FloatEditSlider::updateText()
+{
+    Q_D(FloatEditSlider);
+    d->edit->setText(QString::number(d->value));
+}
+
+void FloatEditSlider::updateWidget()
+{
+    Q_D(FloatEditSlider);
+    d->slider->setValue(d->value / d->step);
+    d->slider->setMinimum(d->minValue / d->step);
+    d->slider->setMaximum(d->maxValue / d->step);
+    d->slider->setPageStep(d->page / d->step);
+    updateText();
 }
 
 void FloatEditSlider::onRangeChanged(qreal min, qreal max)
 {
-
+    updateWidget();
 }
 
 void FloatEditSlider::onStepChanged(qreal step)
 {
+    updateWidget();
 }
 
 void FloatEditSlider::onPageChanged(qreal page)
 {
+    updateWidget();
 }
 
 void FloatEditSlider::validateText()
