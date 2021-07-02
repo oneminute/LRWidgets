@@ -137,6 +137,18 @@ void FloatEditSlider::setValue(qreal value)
     }
 }
 
+int FloatEditSlider::intValue() const
+{
+    Q_D(const FloatEditSlider);
+    return qRound(d->value * d->step);
+}
+
+void FloatEditSlider::setIntValue(int value)
+{
+    Q_D(FloatEditSlider);
+    setValue(value / d->step);
+}
+
 int FloatEditSlider::sliderPosition() const
 {
     Q_D(const FloatEditSlider);

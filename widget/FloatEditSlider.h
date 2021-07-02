@@ -44,6 +44,9 @@ public:
     qreal value() const;
     void setValue(qreal value);
 
+    int intValue() const;
+    void setIntValue(int value);
+
     int sliderPosition() const;
 
     bool tracking() const;
