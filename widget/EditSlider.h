@@ -9,6 +9,7 @@
 
 #include "ExportLRWidgets.h"
 
+class EditSliderPrivate;
 class LRWIDGET_EXPORT EditSlider : public QWidget
 {
     Q_OBJECT
@@ -18,12 +19,10 @@ class LRWIDGET_EXPORT EditSlider : public QWidget
     Q_PROPERTY(int singleStep READ singleStep WRITE setSingleStep DESIGNABLE true)
     Q_PROPERTY(int pageStep READ pageStep WRITE setPageStep DESIGNABLE true)
     Q_PROPERTY(int value READ value WRITE setValue DESIGNABLE true)
-    Q_PROPERTY(int sliderPosition READ sliderPosition WRITE setSliderPosition DESIGNABLE true)
     Q_PROPERTY(bool tracking READ tracking WRITE setTracking DESIGNABLE true)
     Q_PROPERTY(int maximumLineEditWidth READ maximumLineEditWidth WRITE setMaximumLineEditWidth DESIGNABLE true)
 
 public:
-    EditSlider(QWidget *parent = 0);
     EditSlider(Qt::Orientation dir, QWidget *parent = 0);
 
     int minimum() const;
@@ -41,9 +40,6 @@ public:
     int value() const;
     void setValue(int value);
 
-    int sliderPosition() const;
-    void setSliderPosition(int pos);
-
     bool tracking() const;
     void setTracking(bool tracking);
 
@@ -51,24 +47,22 @@ public:
     void setMaximumLineEditWidth(int width);
 
     QString text() const;
-    void setText(const QString& text);
 
 protected slots:
     void onSliderValueChanged(int value);
-    void onLineEditTextEditingFinished();
+    void onLineEditTextChanged(const QString& text);
 
 signals:
     void valueChanged(int value);
 
 private:
-    void init();
-    void validateText();
 
 private:
-    Qt::Orientation m_dir;
-    QLineEdit* m_edit;
-    QSlider* m_slider;
-    QIntValidator* m_validator;
+    QScopedPointer<EditSliderPrivate> m_ptr;
+
+    Q_DECLARE_PRIVATE_D(m_ptr, EditSlider)
+    Q_DISABLE_COPY(EditSlider)
+    
 };
 
 #endif // EDITSLIDER_H

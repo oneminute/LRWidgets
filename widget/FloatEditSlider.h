@@ -37,6 +37,9 @@ public:
     qreal page() const;
     void setPage(qreal page);
 
+    int decimals() const;
+    void setDecimals(int decimals);
+
     qreal value() const;
     void setValue(qreal value);
 
@@ -62,15 +65,16 @@ protected slots:
     void onRangeChanged(qreal min, qreal max);
     void onStepChanged(qreal step);
     void onPageChanged(qreal page);
+    void onDecimalsChanged(int decimals);
 
 signals:
     void valueChanged(qreal value);
     void rangeChanged(qreal min, qreal max);
     void stepChanged(qreal step);
     void pageChanged(qreal page);
+    void decimalsChanged(int decimals);
 
 private:
-    void validateText();
 
 private:
     QScopedPointer<FloatEditSliderPrivate> m_ptr;

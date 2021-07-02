@@ -1,184 +1,164 @@
 #include "EditSlider.h"
+#include "QLineEditEx.h"
 
 #include <QBoxLayout>
 #include <QtMath>
 
-EditSlider::EditSlider(QWidget *parent) 
-    : QWidget(parent)
-    , m_dir(Qt::Horizontal)
+class EditSliderPrivate
 {
-    init();
-}
+    Q_DECLARE_PUBLIC(EditSlider)
+public:
+    EditSliderPrivate(EditSlider* ptr)
+        : q_ptr(ptr)
+    {}
 
-EditSlider::EditSlider(Qt::Orientation dir, QWidget *parent) 
+    EditSlider* q_ptr;
+
+    QLineEditEx* edit;
+    QSlider* slider;
+    QIntValidator* validator;
+};
+
+EditSlider::EditSlider(Qt::Orientation orientation, QWidget *parent) 
     : QWidget(parent)
-    , m_dir(dir)
+    , m_ptr(new EditSliderPrivate(this))
 {
-    init();
+    Q_D(EditSlider);
+    d->slider = new QSlider(orientation, this);
+
+    d->edit = new QLineEditEx(this);
+    d->edit->setText(QString::number(d->slider->minimum()));
+
+    d->validator = new QIntValidator(d->slider->minimum(), d->slider->maximum(), this);
+    d->edit->setValidator(d->validator);
+
+    QBoxLayout* layout = (orientation == Qt::Horizontal) ? new QBoxLayout(QBoxLayout::LeftToRight, this) : new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setMargin(0);
+    layout->addWidget(d->slider);
+    layout->addWidget(d->edit);
+    layout->setStretch(0, 1);
+    layout->setStretch(1, 0);
+    layout->setMargin(0);
+    setLayout(layout);
+
+    connect(d->slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
+    connect(d->slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
+    connect(d->edit, &QLineEditEx::textChanged, this, &EditSlider::onLineEditTextChanged);
 }
 
 int EditSlider::minimum() const
 {
-    return m_slider->minimum();
+    Q_D(const EditSlider);
+    return d->slider->minimum();
 }
 
 void EditSlider::setMinimum(int minimum)
 {
-    m_slider->setMinimum(minimum);
-    m_validator->setRange(m_slider->minimum(), m_slider->maximum());
-    validateText();
+    Q_D(EditSlider);
+    d->slider->setMinimum(minimum);
+    d->validator->setRange(d->slider->minimum(), d->slider->maximum());
+    //validateText();
 }
 
 int EditSlider::maximum() const
 {
-    return m_slider->maximum();
+    Q_D(const EditSlider);
+    return d->slider->maximum();
 }
 
 void EditSlider::setMaximum(int maximum)
 {
-    m_slider->setMaximum(maximum);
-    m_validator->setRange(m_slider->minimum(), m_slider->maximum());
-    validateText();
+    Q_D(EditSlider);
+    d->slider->setMaximum(maximum);
+    d->validator->setRange(d->slider->minimum(), d->slider->maximum());
+    //validateText();
 }
 
 int EditSlider::singleStep() const
 {
-    return m_slider->singleStep();
+    Q_D(const EditSlider);
+    return d->slider->singleStep();
 }
 
 void EditSlider::setSingleStep(int singleStep)
 {
-    m_slider->setSingleStep(singleStep);
+    Q_D(EditSlider);
+    d->slider->setSingleStep(singleStep);
 }
 
 int EditSlider::pageStep() const
 {
-    return m_slider->pageStep();
+    Q_D(const EditSlider);
+    return d->slider->pageStep();
 }
 
 void EditSlider::setPageStep(int pageStep)
 {
-    m_slider->setPageStep(pageStep);
+    Q_D(EditSlider);
+    d->slider->setPageStep(pageStep);
 }
 
 int EditSlider::value() const
 {
-    return m_slider->value();
+    Q_D(const EditSlider);
+    return d->slider->value();
 }
 
 void EditSlider::setValue(int value)
 {
-    m_slider->setValue(value);
-    m_edit->blockSignals(true);
-    m_edit->setText(QString::number(value));
-    m_edit->blockSignals(false);
+    Q_D(EditSlider);
+    d->slider->setValue(value);
+    d->edit->blockSignals(true);
+    d->edit->setText(QString::number(value));
+    d->edit->blockSignals(false);
 
     emit valueChanged(value);
 }
 
-int EditSlider::sliderPosition() const
-{
-    return m_slider->sliderPosition();
-}
-
-void EditSlider::setSliderPosition(int pos)
-{
-    m_slider->setSliderPosition(pos);
-}
-
 bool EditSlider::tracking() const
 {
-    return m_slider->hasTracking();
+    Q_D(const EditSlider);
+    return d->slider->hasTracking();
 }
 
 void EditSlider::setTracking(bool tracking)
 {
-    m_slider->setTracking(tracking);
+    Q_D(EditSlider);
+    d->slider->setTracking(tracking);
 }
 
 int EditSlider::maximumLineEditWidth() const
 {
-    return m_edit->maximumWidth();
+    Q_D(const EditSlider);
+    return d->edit->maximumWidth();
 }
 
 void EditSlider::setMaximumLineEditWidth(int width)
 {
-    m_edit->setMaximumWidth(width);
+    Q_D(EditSlider);
+    d->edit->setMaximumWidth(width);
 }
 
 QString EditSlider::text() const
 {
-    return m_edit->text();
-}
-
-void EditSlider::setText(const QString &text)
-{
-    int pos = 0;
-    QString str = text;
-    if (m_validator->validate(str, pos) == QValidator::Acceptable)
-    {
-        m_edit->setText(text);
-        int value = text.toInt();
-        m_slider->blockSignals(true);
-        m_slider->setValue(value);
-        m_slider->blockSignals(false);
-
-        emit valueChanged(value);
-    }
+    Q_D(const EditSlider);
+    return d->edit->text();
 }
 
 void EditSlider::onSliderValueChanged(int value)
 {
-    m_edit->blockSignals(true);
-    m_edit->setText(QString::number(value));
-    m_edit->blockSignals(false);
+    Q_D(EditSlider);
+    d->edit->blockSignals(true);
+    d->edit->setText(QString::number(value));
+    d->edit->blockSignals(false);
 }
 
-void EditSlider::onLineEditTextEditingFinished()
+void EditSlider::onLineEditTextChanged(const QString& text)
 {
-    int pos = 0;
-    if (m_validator->validate(m_edit->text(), pos) == QValidator::Acceptable)
-    {
-        m_slider->blockSignals(true);
-        int value = qBound(m_slider->minimum(), m_edit->text().toInt(), m_slider->maximum());
-        m_slider->setValue(value);
-        m_slider->blockSignals(false);
-    }
+    Q_D(EditSlider);
+    d->slider->blockSignals(true);
+    int value = qBound(d->slider->minimum(), d->edit->text().toInt(), d->slider->maximum());
+    d->slider->setValue(value);
+    d->slider->blockSignals(false);
 }
 
-void EditSlider::init()
-{
-    m_slider = new QSlider(m_dir);
-
-    m_edit = new QLineEdit;
-    m_edit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-    m_edit->setText(QString::number(m_slider->minimum()));
-
-    m_validator = new QIntValidator(m_slider->minimum(), m_slider->maximum(), this);
-    m_edit->setValidator(m_validator);
-
-    QBoxLayout* layout = new QBoxLayout(QBoxLayout::Direction::LeftToRight);
-    if (m_dir == Qt::Horizontal)
-        layout->setDirection(QBoxLayout::LeftToRight);
-    else if (m_dir == Qt::Vertical)
-        layout->setDirection(QBoxLayout::TopToBottom);
-
-    layout->addWidget(m_slider);
-    layout->addWidget(m_edit);
-    layout->setStretch(0, 1);
-    layout->setStretch(1, 0);
-    layout->setMargin(0);
-
-    setLayout(layout);
-
-    connect(m_slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
-    connect(m_slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
-    connect(m_edit, &QLineEdit::editingFinished, this, &EditSlider::onLineEditTextEditingFinished);
-}
-
-void EditSlider::validateText()
-{
-    int value = m_edit->text().toInt();
-    value = qBound(m_slider->minimum(), value, m_slider->maximum());
-    m_edit->setText(QString::number(value));
-}

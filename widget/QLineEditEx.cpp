@@ -1,5 +1,6 @@
 #include "QLineEditEx.h"
 #include <QDebug>
+#include <QDoubleValidator>
 
 class QLineEditExPrivate
 {
