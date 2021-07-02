@@ -23,6 +23,7 @@ class LRWIDGET_EXPORT EditSlider : public QWidget
     Q_PROPERTY(int maximumLineEditWidth READ maximumLineEditWidth WRITE setMaximumLineEditWidth DESIGNABLE true)
 
 public:
+    EditSlider(QWidget *parent = 0);
     EditSlider(Qt::Orientation dir, QWidget *parent = 0);
 
     int minimum() const;
@@ -51,6 +52,7 @@ public:
 protected slots:
     void onSliderValueChanged(int value);
     void onLineEditTextChanged(const QString& text);
+    void initialize(Qt::Orientation orientation);
 
 signals:
     void valueChanged(int value);

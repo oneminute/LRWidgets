@@ -23,6 +23,7 @@ class LRWIDGET_EXPORT FloatEditSlider : public QWidget
     Q_PROPERTY(QString textTemplate READ textTemplate WRITE setTextTemplate DESIGNABLE true)
 
 public:
+    FloatEditSlider(QWidget *parent = nullptr);
     FloatEditSlider(Qt::Orientation orientation, QWidget *parent = nullptr);
 
     qreal minimum() const;
@@ -66,6 +67,7 @@ protected slots:
     void onStepChanged(qreal step);
     void onPageChanged(qreal page);
     void onDecimalsChanged(int decimals);
+    void initialize(Qt::Orientation orientation);
 
 signals:
     void valueChanged(qreal value);

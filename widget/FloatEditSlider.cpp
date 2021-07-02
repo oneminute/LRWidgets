@@ -27,39 +27,18 @@ public:
 
 };
 
+FloatEditSlider::FloatEditSlider(QWidget* parent)
+    : QWidget(parent)
+    , m_ptr(new FloatEditSliderPrivate(this))
+{
+    initialize(Qt::Horizontal);
+}
+
 FloatEditSlider::FloatEditSlider(Qt::Orientation orientation, QWidget* parent)
     : QWidget(parent)
     , m_ptr(new FloatEditSliderPrivate(this))
 {
-    Q_D(FloatEditSlider);
-    d->orientation = orientation;
-    d->slider = new QSlider(orientation, this);
-    d->edit = new QLineEditEx(this);
-
-    d->value = 0.0;
-    d->minValue = 0.0;
-    d->maxValue = 100.0;
-    d->step = 0.1;
-    d->page = 1;
-    d->decimals = 1;
-
-    QBoxLayout* layout = (orientation == Qt::Horizontal) ? new QBoxLayout(QBoxLayout::LeftToRight, this) : new QBoxLayout(QBoxLayout::TopToBottom, this);
-    layout->setMargin(0);
-    layout->addWidget(d->slider);
-    layout->addWidget(d->edit);
-    layout->setStretch(0, 1);
-    layout->setStretch(1, 0);
-    setLayout(layout);
-
-    d->validator = new QDoubleValidator(d->minValue, d->maxValue, d->decimals, this);
-    d->edit->setValidator(d->validator);
-
-    connect(this, &FloatEditSlider::rangeChanged, this, &FloatEditSlider::onRangeChanged);
-    connect(this, &FloatEditSlider::stepChanged, this, &FloatEditSlider::onStepChanged);
-    connect(this, &FloatEditSlider::pageChanged, this, &FloatEditSlider::onPageChanged);
-    connect(this, &FloatEditSlider::decimalsChanged, this, &FloatEditSlider::onDecimalsChanged);
-    connect(d->slider, &QSlider::valueChanged, this, &FloatEditSlider::onSliderValueChanged);
-    connect(d->edit, &QLineEditEx::textChanged, this, &FloatEditSlider::onLineEditTextChanged);
+    initialize(orientation);
 }
 
 qreal FloatEditSlider::minimum() const
@@ -253,5 +232,38 @@ void FloatEditSlider::onPageChanged(qreal page)
 void FloatEditSlider::onDecimalsChanged(int decimals)
 {
     updateWidget();
+}
+
+void FloatEditSlider::initialize(Qt::Orientation orientation)
+{
+    Q_D(FloatEditSlider);
+    d->orientation = orientation;
+    d->slider = new QSlider(orientation, this);
+    d->edit = new QLineEditEx(this);
+
+    d->value = 0.0;
+    d->minValue = 0.0;
+    d->maxValue = 100.0;
+    d->step = 0.1;
+    d->page = 1;
+    d->decimals = 1;
+
+    QBoxLayout* layout = (orientation == Qt::Horizontal) ? new QBoxLayout(QBoxLayout::LeftToRight, this) : new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setMargin(0);
+    layout->addWidget(d->slider);
+    layout->addWidget(d->edit);
+    layout->setStretch(0, 1);
+    layout->setStretch(1, 0);
+    setLayout(layout);
+
+    d->validator = new QDoubleValidator(d->minValue, d->maxValue, d->decimals, this);
+    d->edit->setValidator(d->validator);
+
+    connect(this, &FloatEditSlider::rangeChanged, this, &FloatEditSlider::onRangeChanged);
+    connect(this, &FloatEditSlider::stepChanged, this, &FloatEditSlider::onStepChanged);
+    connect(this, &FloatEditSlider::pageChanged, this, &FloatEditSlider::onPageChanged);
+    connect(this, &FloatEditSlider::decimalsChanged, this, &FloatEditSlider::onDecimalsChanged);
+    connect(d->slider, &QSlider::valueChanged, this, &FloatEditSlider::onSliderValueChanged);
+    connect(d->edit, &QLineEditEx::textChanged, this, &FloatEditSlider::onLineEditTextChanged);
 }
 

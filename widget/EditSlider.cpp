@@ -19,31 +19,18 @@ public:
     QIntValidator* validator;
 };
 
+EditSlider::EditSlider(QWidget* parent)
+    : QWidget(parent)
+    , m_ptr(new EditSliderPrivate(this))
+{
+    initialize(Qt::Horizontal);
+}
+
 EditSlider::EditSlider(Qt::Orientation orientation, QWidget *parent) 
     : QWidget(parent)
     , m_ptr(new EditSliderPrivate(this))
 {
-    Q_D(EditSlider);
-    d->slider = new QSlider(orientation, this);
-
-    d->edit = new QLineEditEx(this);
-    d->edit->setText(QString::number(d->slider->minimum()));
-
-    d->validator = new QIntValidator(d->slider->minimum(), d->slider->maximum(), this);
-    d->edit->setValidator(d->validator);
-
-    QBoxLayout* layout = (orientation == Qt::Horizontal) ? new QBoxLayout(QBoxLayout::LeftToRight, this) : new QBoxLayout(QBoxLayout::TopToBottom, this);
-    layout->setMargin(0);
-    layout->addWidget(d->slider);
-    layout->addWidget(d->edit);
-    layout->setStretch(0, 1);
-    layout->setStretch(1, 0);
-    layout->setMargin(0);
-    setLayout(layout);
-
-    connect(d->slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
-    connect(d->slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
-    connect(d->edit, &QLineEditEx::textChanged, this, &EditSlider::onLineEditTextChanged);
+    initialize(orientation);
 }
 
 int EditSlider::minimum() const
@@ -160,5 +147,31 @@ void EditSlider::onLineEditTextChanged(const QString& text)
     int value = qBound(d->slider->minimum(), d->edit->text().toInt(), d->slider->maximum());
     d->slider->setValue(value);
     d->slider->blockSignals(false);
+}
+
+void EditSlider::initialize(Qt::Orientation orientation)
+{
+    Q_D(EditSlider);
+    d->slider = new QSlider(orientation, this);
+
+    d->edit = new QLineEditEx(this);
+    d->edit->setText(QString::number(d->slider->minimum()));
+
+    d->validator = new QIntValidator(d->slider->minimum(), d->slider->maximum(), this);
+    d->edit->setValidator(d->validator);
+
+    QBoxLayout* layout = (orientation == Qt::Horizontal) ? new QBoxLayout(QBoxLayout::LeftToRight, this) : new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setMargin(0);
+    layout->addWidget(d->slider);
+    layout->addWidget(d->edit);
+    layout->setStretch(0, 1);
+    layout->setStretch(1, 0);
+    layout->setMargin(0);
+    setLayout(layout);
+
+    connect(d->slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
+    connect(d->slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
+    connect(d->edit, &QLineEditEx::textChanged, this, &EditSlider::onLineEditTextChanged);
+
 }
 
