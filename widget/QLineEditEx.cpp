@@ -52,7 +52,7 @@ void QLineEditEx::setText(const QString& text)
     {
         d->text = text;
         QLineEdit::setText(this->renderText());
-        emit textChanged(text);
+        emit textChangedEx(text);
     }
 }
 
@@ -90,7 +90,7 @@ void QLineEditEx::onEditingFinished()
     d->text = QLineEdit::text();
     QString text = this->renderText();
     QLineEdit::setText(text);
-    emit textChanged(text);
+    emit textChangedEx(text);
 }
 
 void QLineEditEx::onTextTemplateChanged(const QString& textTemplate)

@@ -53,6 +53,7 @@ void FloatEditSlider::setMinimum(qreal minimum)
     if (minimum != d->minValue)
     {
         d->minValue = minimum;
+        updateWidget();
         emit rangeChanged(d->minValue, d->maxValue);
     }
 }
@@ -69,6 +70,7 @@ void FloatEditSlider::setMaximum(qreal maximum)
     if (maximum != d->maxValue)
     {
         d->maxValue = maximum;
+        updateWidget();
         emit rangeChanged(d->minValue, d->maxValue);
     }
 }
@@ -85,6 +87,7 @@ void FloatEditSlider::setStep(qreal step)
     if (step != d->step)
     {
         d->step = step;
+        updateSlider();
         emit stepChanged(step);
     }
 }
@@ -101,6 +104,7 @@ void FloatEditSlider::setPage(qreal page)
     if (page != d->page)
     {
         d->page = page;
+        updateSlider();
         emit pageChanged(page);
     }
 }
@@ -117,6 +121,7 @@ void FloatEditSlider::setDecimals(int decimals)
     if (decimals != d->decimals)
     {
         d->decimals = decimals;
+        updateText();
         emit decimalsChanged(decimals);
     }
 }
@@ -133,6 +138,7 @@ void FloatEditSlider::setValue(qreal value)
     if (value != d->value)
     {
         d->value = value;
+        updateWidget();
         emit valueChanged(value);
     }
 }
@@ -191,13 +197,38 @@ void FloatEditSlider::setTextTemplate(const QString& textTemplate)
     d->edit->setTextTemplate(textTemplate);
 }
 
+void FloatEditSlider::updateText()
+{
+    Q_D(FloatEditSlider);
+    d->edit->blockSignals(true);
+    d->edit->setText(QString::number(d->value));
+    d->edit->blockSignals(false);
+}
+
+void FloatEditSlider::updateSlider()
+{
+    Q_D(FloatEditSlider);
+    d->slider->blockSignals(true);
+    d->slider->setMinimum(d->minValue / d->step);
+    d->slider->setMaximum(d->maxValue / d->step);
+    d->slider->setPageStep(d->page / d->step);
+    d->slider->setValue(d->value / d->step);
+    d->slider->blockSignals(false);
+}
+
+void FloatEditSlider::updateWidget()
+{
+    Q_D(FloatEditSlider);
+    d->validator->setRange(d->minValue, d->maxValue, d->decimals);
+    updateSlider();
+    updateText();
+}
+
 void FloatEditSlider::onSliderValueChanged(int value)
 {
     Q_D(FloatEditSlider);
     d->value = value * d->step;
-    d->edit->blockSignals(true);
     updateText();
-    d->edit->blockSignals(false);
     emit valueChanged(d->value);
 }
 
@@ -209,21 +240,9 @@ void FloatEditSlider::onLineEditTextChanged(const QString& text)
     emit valueChanged(d->value);
 }
 
-void FloatEditSlider::updateText()
+void FloatEditSlider::onSelfValueChanged(qreal value)
 {
-    Q_D(FloatEditSlider);
-    d->edit->setText(QString::number(d->value));
-}
-
-void FloatEditSlider::updateWidget()
-{
-    Q_D(FloatEditSlider);
-    d->slider->setValue(d->value / d->step);
-    d->slider->setMinimum(d->minValue / d->step);
-    d->slider->setMaximum(d->maxValue / d->step);
-    d->slider->setPageStep(d->page / d->step);
-    d->validator->setRange(d->minValue, d->maxValue, d->decimals);
-    updateText();
+    updateWidget();
 }
 
 void FloatEditSlider::onRangeChanged(qreal min, qreal max)
@@ -270,12 +289,14 @@ void FloatEditSlider::initialize(Qt::Orientation orientation)
 
     d->validator = new QDoubleValidator(d->minValue, d->maxValue, d->decimals, this);
     d->edit->setValidator(d->validator);
+    d->edit->setMaximumWidth(50);
 
-    connect(this, &FloatEditSlider::rangeChanged, this, &FloatEditSlider::onRangeChanged);
-    connect(this, &FloatEditSlider::stepChanged, this, &FloatEditSlider::onStepChanged);
-    connect(this, &FloatEditSlider::pageChanged, this, &FloatEditSlider::onPageChanged);
-    connect(this, &FloatEditSlider::decimalsChanged, this, &FloatEditSlider::onDecimalsChanged);
+    //connect(this, &FloatEditSlider::rangeChanged, this, &FloatEditSlider::onRangeChanged);
+    //connect(this, &FloatEditSlider::stepChanged, this, &FloatEditSlider::onStepChanged);
+    //connect(this, &FloatEditSlider::pageChanged, this, &FloatEditSlider::onPageChanged);
+    //connect(this, &FloatEditSlider::decimalsChanged, this, &FloatEditSlider::onDecimalsChanged);
+    //connect(this, &FloatEditSlider::valueChanged, this, &FloatEditSlider::onSelfValueChanged);
     connect(d->slider, &QSlider::valueChanged, this, &FloatEditSlider::onSliderValueChanged);
-    connect(d->edit, &QLineEditEx::textChanged, this, &FloatEditSlider::onLineEditTextChanged);
+    connect(d->edit, &QLineEditEx::textChangedEx, this, &FloatEditSlider::onLineEditTextChanged);
 }
 

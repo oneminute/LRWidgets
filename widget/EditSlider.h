@@ -21,6 +21,7 @@ class LRWIDGET_EXPORT EditSlider : public QWidget
     Q_PROPERTY(int value READ value WRITE setValue DESIGNABLE true)
     Q_PROPERTY(bool tracking READ tracking WRITE setTracking DESIGNABLE true)
     Q_PROPERTY(int maximumLineEditWidth READ maximumLineEditWidth WRITE setMaximumLineEditWidth DESIGNABLE true)
+    Q_PROPERTY(QString textTemplate READ textTemplate WRITE setTextTemplate DESIGNABLE true)
 
 public:
     EditSlider(QWidget *parent = 0);
@@ -48,6 +49,9 @@ public:
     void setMaximumLineEditWidth(int width);
 
     QString text() const;
+
+    QString textTemplate() const;
+    void setTextTemplate(const QString& textTemplate);
 
 protected slots:
     void onSliderValueChanged(int value);

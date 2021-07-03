@@ -21,6 +21,8 @@ int main(int argc, char** argv)
     slider01->setMaximum(300);
     slider01->setPage(10);
     slider01->setMaximumLineEditWidth(50);
+    slider01->setTextTemplate("%1%");
+    slider01->setValue(50);
 
     EditSlider* slider02 = new EditSlider(Qt::Horizontal);
     slider02->setSingleStep(1);

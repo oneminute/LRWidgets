@@ -17,6 +17,9 @@ class LRWIDGET_EXPORT FloatEditSlider : public QWidget
     Q_PROPERTY(qreal minimum READ minimum WRITE setMinimum DESIGNABLE true)
     Q_PROPERTY(qreal maximum READ maximum WRITE setMaximum DESIGNABLE true)
     Q_PROPERTY(qreal value READ value WRITE setValue DESIGNABLE true)
+    Q_PROPERTY(qreal step READ step WRITE setStep DESIGNABLE true)
+    Q_PROPERTY(qreal page READ page WRITE setPage DESIGNABLE true)
+    Q_PROPERTY(qreal decimals READ decimals WRITE setDecimals DESIGNABLE true)
     Q_PROPERTY(qreal sliderPosition READ sliderPosition)
     Q_PROPERTY(bool tracking READ tracking)
     Q_PROPERTY(int maximumLineEditWidth READ maximumLineEditWidth WRITE setMaximumLineEditWidth DESIGNABLE true)
@@ -60,12 +63,15 @@ public:
     void setTextTemplate(const QString& textTemplate);
 
 public slots:
-    void onSliderValueChanged(int value);
-    void onLineEditTextChanged(const QString& text);
     void updateText();
+    void updateSlider();
     void updateWidget();
 
 protected slots:
+    void onSliderValueChanged(int value);
+    void onLineEditTextChanged(const QString& text);
+    void onSelfValueChanged(qreal value);
+
     void onRangeChanged(qreal min, qreal max);
     void onStepChanged(qreal step);
     void onPageChanged(qreal page);

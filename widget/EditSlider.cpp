@@ -132,6 +132,18 @@ QString EditSlider::text() const
     return d->edit->text();
 }
 
+QString EditSlider::textTemplate() const
+{
+    Q_D(const EditSlider);
+    return d->edit->textTemplate();
+}
+
+void EditSlider::setTextTemplate(const QString& textTemplate)
+{
+    Q_D(EditSlider);
+    d->edit->setTextTemplate(textTemplate);
+}
+
 void EditSlider::onSliderValueChanged(int value)
 {
     Q_D(EditSlider);
@@ -159,6 +171,7 @@ void EditSlider::initialize(Qt::Orientation orientation)
 
     d->validator = new QIntValidator(d->slider->minimum(), d->slider->maximum(), this);
     d->edit->setValidator(d->validator);
+    d->edit->setMaximumWidth(50);
 
     QBoxLayout* layout = (orientation == Qt::Horizontal) ? new QBoxLayout(QBoxLayout::LeftToRight, this) : new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setMargin(0);
@@ -171,7 +184,7 @@ void EditSlider::initialize(Qt::Orientation orientation)
 
     connect(d->slider, &QSlider::valueChanged, this, &EditSlider::onSliderValueChanged);
     connect(d->slider, &QSlider::valueChanged, this, &EditSlider::valueChanged);
-    connect(d->edit, &QLineEditEx::textChanged, this, &EditSlider::onLineEditTextChanged);
+    connect(d->edit, &QLineEditEx::textChangedEx, this, &EditSlider::onLineEditTextChanged);
 
 }
 

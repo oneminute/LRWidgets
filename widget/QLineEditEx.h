@@ -9,7 +9,7 @@ class QLineEditEx : public QLineEdit
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString renderText READ renderText WRITE setText NOTIFY textChanged DESIGNABLE true )
+    Q_PROPERTY(QString renderText READ renderText WRITE setText NOTIFY textChangedEx DESIGNABLE true )
     Q_PROPERTY(QString textTemplate READ textTemplate WRITE setTextTemplate NOTIFY textTemplateChanged DESIGNABLE true)
 
 public:
@@ -34,7 +34,7 @@ protected slots:
     void onTextTemplateChanged(const QString& textTemplate);
 
 signals:
-    void textChanged(const QString& text);
+    void textChangedEx(const QString& text);
     void textTemplateChanged(const QString& textTemplate);
 
 private:
