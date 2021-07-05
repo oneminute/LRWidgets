@@ -235,7 +235,7 @@ void FloatEditSlider::onSliderValueChanged(int value)
 void FloatEditSlider::onLineEditTextChanged(const QString& text)
 {
     Q_D(FloatEditSlider);
-    d->value = text.toDouble();
+    d->value = d->edit->text().toDouble();
     d->slider->setValue(d->value / d->step);
     emit valueChanged(d->value);
 }
