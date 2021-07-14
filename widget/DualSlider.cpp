@@ -143,26 +143,24 @@ void DualSlider::paintEvent(QPaintEvent* evt)
 
     QPainter p(this);
     QStyleOptionSlider opt;
-    QStyleOptionSlider opt1;
-    QStyleOptionSlider opt2;
-    initStyleOption(&opt);
-    initStyleOption(&opt1);
-    initStyleOption(&opt2);
 
+    initStyleOption(&opt);
     opt.subControls = QStyle::SC_SliderGroove;
-    opt.rect = style()->subControlRect(QStyle::CC_Slider, &opt1, QStyle::SC_SliderGroove, this);
+    opt.rect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderGroove, this);
     opt.activeSubControls = QStyle::SC_SliderGroove;
     style()->drawComplexControl(QStyle::CC_Slider, &opt, &p, this);
 
-    opt1.sliderPosition = d->lowerValue;
-    opt1.subControls = QStyle::SC_SliderHandle;
-    opt1.rect = style()->subControlRect(QStyle::CC_Slider, &opt1, QStyle::SC_SliderHandle, this);
-    style()->drawComplexControl(QStyle::CC_Slider, &opt1, &p, this);
+    initStyleOption(&opt);
+    opt.sliderPosition = d->lowerValue;
+    opt.subControls = QStyle::SC_SliderHandle;
+    opt.rect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    style()->drawComplexControl(QStyle::CC_Slider, &opt, &p, this);
 
-    opt2.sliderPosition = d->higherValue;
-    opt2.subControls = QStyle::SC_SliderHandle;
-    opt2.rect = style()->subControlRect(QStyle::CC_Slider, &opt2, QStyle::SC_SliderHandle, this);
-    style()->drawComplexControl(QStyle::CC_Slider, &opt2, &p, this);
+    initStyleOption(&opt);
+    opt.sliderPosition = d->higherValue;
+    opt.subControls = QStyle::SC_SliderHandle;
+    opt.rect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    style()->drawComplexControl(QStyle::CC_Slider, &opt, &p, this);
 }
 
 void DualSlider::mousePressEvent(QMouseEvent* evt)
@@ -240,7 +238,7 @@ void DualSlider::mouseMoveEvent(QMouseEvent* evt)
     initStyleOption(&opt);
     
     int newPosition = d->pixelPosToRangeValue(d->pick(evt->pos()) - d->clickOffset, d->currentHandle);
-    qDebug() << "newPosition: " << newPosition;
+    qDebug() << d->currentHandle << "newPosition:" << newPosition;
     setSliderPosition(newPosition, d->currentHandle);
 }
 

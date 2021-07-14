@@ -39,6 +39,10 @@ protected:
     QRect subControlRect(QStyle::SubControl subControl, const QStyleOptionSlider* option, HandleType ht = HT_Lower) const;
     QStyle::SubControl hitTestComplexControl(const QStyleOptionSlider* option, const QPoint &pt, HandleType& handleType) const;
 
+signals:
+    void lowerValueChanged(int value);
+    void higherValueChanged(int value);
+
 private:
     QScopedPointer<DualSliderPrivate> m_ptr;
     Q_DECLARE_PRIVATE_D(m_ptr, DualSlider)

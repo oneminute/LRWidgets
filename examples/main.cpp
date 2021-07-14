@@ -37,6 +37,7 @@ int main(int argc, char** argv)
     dualSlider01->setMinimum(0);
     dualSlider01->setMaximum(100);
     dualSlider01->setLowerValue(30);
+    dualSlider01->setHigherValue(80);
 
     QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->addWidget(lineEdit01);
