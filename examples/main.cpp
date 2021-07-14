@@ -1,9 +1,11 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QWidget>
-#include "widget/QLineEditEx.h"
+
+#include "widget/DualSlider.h"
 #include "widget/EditSlider.h"
 #include "widget/FloatEditSlider.h"
+#include "widget/QLineEditEx.h"
 
 int main(int argc, char** argv)
 {
@@ -31,11 +33,17 @@ int main(int argc, char** argv)
     slider02->setPageStep(10);
     slider02->setMaximumLineEditWidth(50);
 
+    DualSlider* dualSlider01 = new DualSlider(Qt::Horizontal);
+    dualSlider01->setMinimum(0);
+    dualSlider01->setMaximum(100);
+    dualSlider01->setLowerValue(30);
+
     QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->addWidget(lineEdit01);
     layout->addWidget(lineEdit02);
     layout->addWidget(slider02);
     layout->addWidget(slider01);
+    layout->addWidget(dualSlider01);
     window.setLayout(layout);
     
     window.show();

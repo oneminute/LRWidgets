@@ -121,6 +121,7 @@ void FloatEditSlider::setDecimals(int decimals)
     if (decimals != d->decimals)
     {
         d->decimals = decimals;
+        d->validator->setRange(d->minValue, d->maxValue, d->decimals);
         updateText();
         emit decimalsChanged(decimals);
     }
@@ -287,7 +288,10 @@ void FloatEditSlider::initialize(Qt::Orientation orientation)
     layout->setStretch(1, 0);
     setLayout(layout);
 
+    QLocale lo(QLocale::C);
+    lo.setNumberOptions(QLocale::RejectGroupSeparator);
     d->validator = new QDoubleValidator(d->minValue, d->maxValue, d->decimals, this);
+    d->validator->setLocale(lo);
     d->edit->setValidator(d->validator);
     d->edit->setMaximumWidth(50);
 
