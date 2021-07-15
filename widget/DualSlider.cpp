@@ -100,6 +100,7 @@ void DualSlider::setLowerValue(int value)
         return;
     d->lowerValue = value;
     update();
+    emit lowerValueChanged(value);
 }
 
 int DualSlider::higherValue() const
@@ -116,6 +117,7 @@ void DualSlider::setHigherValue(int value)
         return;
     d->higherValue = value;
     update();
+    emit higherValueChanged(value);
 }
 
 void DualSlider::setSliderPosition(int position, HandleType ht)
@@ -238,7 +240,7 @@ void DualSlider::mouseMoveEvent(QMouseEvent* evt)
     initStyleOption(&opt);
     
     int newPosition = d->pixelPosToRangeValue(d->pick(evt->pos()) - d->clickOffset, d->currentHandle);
-    qDebug() << d->currentHandle << "newPosition:" << newPosition;
+    //qDebug() << d->currentHandle << "newPosition:" << newPosition;
     setSliderPosition(newPosition, d->currentHandle);
 }
 
@@ -247,10 +249,12 @@ QRect DualSlider::subControlRect(QStyle::SubControl subControl, const QStyleOpti
     Q_D(const DualSlider);
     QRect ret;
     int tickOffset = style()->pixelMetric(QStyle::PM_SliderTickmarkOffset, option, this);
-    int thickness = style()->pixelMetric(QStyle::PM_SliderControlThickness, option, this);
+    int thickness = style()->pixelMetric(QStyle::PM_SliderControlThickness, option, this) |
+        style()->pixelMetric(QStyle::PM_SliderThickness, option, this);
     int pos = ht == HT_Lower ? d->lowerValue : d->higherValue;
     switch (subControl) {
-    case QStyle::SC_SliderHandle: {
+    case QStyle::SC_SliderHandle: 
+    {
         int sliderPos = 0;
         int len = style()->pixelMetric(QStyle::PM_SliderLength, option, this);
         bool horizontal = option->orientation == Qt::Horizontal;
@@ -263,8 +267,10 @@ QRect DualSlider::subControlRect(QStyle::SubControl subControl, const QStyleOpti
             ret.setRect(option->rect.x() + sliderPos, option->rect.y() + tickOffset, len, thickness);
         else
             ret.setRect(option->rect.x() + tickOffset, option->rect.y() + sliderPos, thickness, len);
-        break; }
+        break;
+    }
     case QStyle::SC_SliderGroove:
+    {
         if (option->orientation == Qt::Horizontal)
             ret.setRect(option->rect.x(), option->rect.y() + tickOffset,
                 option->rect.width(), thickness);
@@ -272,6 +278,7 @@ QRect DualSlider::subControlRect(QStyle::SubControl subControl, const QStyleOpti
             ret.setRect(option->rect.x() + tickOffset, option->rect.y(),
                 thickness, option->rect.height());
         break;
+    }
     default:
         break;
     }
@@ -290,7 +297,7 @@ QStyle::SubControl DualSlider::hitTestComplexControl(const QStyleOptionSlider* o
         handleType = HT_Lower;
     }
     else {
-        r = subControlRect(QStyle::SC_SliderGroove, option, HT_Higher);
+        r = subControlRect(QStyle::SC_SliderHandle, option, HT_Higher);
         if (r.isValid() && r.contains(pt)) {
             sc = QStyle::SC_SliderHandle;
             handleType = HT_Higher;

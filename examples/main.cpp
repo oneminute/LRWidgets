@@ -3,6 +3,7 @@
 #include <QWidget>
 
 #include "widget/DualSlider.h"
+#include "widget/FloatEditDualSlider.h"
 #include "widget/EditSlider.h"
 #include "widget/FloatEditSlider.h"
 #include "widget/QLineEditEx.h"
@@ -39,12 +40,16 @@ int main(int argc, char** argv)
     dualSlider01->setLowerValue(30);
     dualSlider01->setHigherValue(80);
 
+    FloatEditDualSlider* feSlider01 = new FloatEditDualSlider(Qt::Horizontal);
+    feSlider01->setProperty("textTemplate", "%1%");
+
     QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->addWidget(lineEdit01);
     layout->addWidget(lineEdit02);
     layout->addWidget(slider02);
     layout->addWidget(slider01);
     layout->addWidget(dualSlider01);
+    layout->addWidget(feSlider01);
     window.setLayout(layout);
     
     window.show();
