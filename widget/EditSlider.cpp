@@ -155,10 +155,8 @@ void EditSlider::onSliderValueChanged(int value)
 void EditSlider::onLineEditTextChanged(const QString& text)
 {
     Q_D(EditSlider);
-    d->slider->blockSignals(true);
     int value = qBound(d->slider->minimum(), d->edit->text().toInt(), d->slider->maximum());
     d->slider->setValue(value);
-    d->slider->blockSignals(false);
 }
 
 void EditSlider::initialize(Qt::Orientation orientation)
